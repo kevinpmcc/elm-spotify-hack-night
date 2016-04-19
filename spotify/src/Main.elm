@@ -5,8 +5,9 @@ import StartApp
 import State
 import Task exposing (Task)
 import View
+import Types
 
-
+app : StartApp.App Types.Model
 app =
   StartApp.start
     { init = State.init

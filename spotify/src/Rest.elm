@@ -10,12 +10,12 @@ import Json.Decode as Decode exposing ((:=),Decoder)
 import Signal exposing (message, forwardTo, Address)
 import Task
 import Types exposing (..)
-
+import Debug 
 
 search : String -> Effects Action
 search query =
   Http.get decodeAnswers (searchUrl query)
-    |> Task.toMaybe
+    |> Task.toMaybe 
     |> Task.map RegisterAnswers
     |> Effects.task
 
@@ -32,7 +32,14 @@ searchUrl query =
 decodeAnswers : Decoder (List Answer)
 decodeAnswers =
   let
-    albumName =
-      Decode.map Answer ("name" := Decode.string)
+    cover =
+      Decode.object3 Cover
+       ("url" := Decode.string)
+       ("height" := Decode.int)
+       ("width" := Decode.int)
+    album =
+          Decode.object2 Answer 
+            ("name" := Decode.string)
+            ("images" := Decode.list cover)
   in
-    (Decode.at [ "albums", "items" ] (Decode.list albumName))
+    (Decode.at [ "albums", "items" ] (Decode.list album))

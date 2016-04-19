@@ -37,7 +37,7 @@ resultsList address model =
         [ class "col-xs-2 col-md-3" ]
         [ resultView answer ]
   in
-    row (List.map toEntry model.answers)
+    row (List.map toEntry (Debug.log "bob" model.answers))
 
 
 resultView : Answer -> Html
@@ -51,8 +51,31 @@ resultView answer =
         [ class "panel-body"
         , style [ ( "height", "10rem" ) ]
         ]
-        [ text answer.name ]
+        [ h3
+          []
+          [ text answer.name 
+          , br [] []
+          , toCover answer.covers
+          ]
+
+          ]
     ]
+
+toCover: List Cover -> Html
+toCover covers =
+  let
+    cover = List.head (List.reverse covers)
+  in 
+     case cover of 
+       Just c ->
+         img
+          [ src c.url
+          , height 50
+          , width 50
+          ]
+          []
+       Nothing ->
+         text "Nothing"
 
 
 
